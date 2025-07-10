@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Icon Color Generator</title>
+</head>
+
+<body>
+    <h2>Upload SVG Icon</h2>
+    <input type="file" id="svgFile" accept=".svg">
+
+    <h3>Select New Color</h3>
+    <input type="color" id="colorPicker" value="#FF0000">
+
+    <br><br>
+    <button onclick="generate()">Generate</button>
+
+    <br><br>
+    <a id="downloadLink" style="display:none;" download="new_icon.svg">Download New SVG</a>
+
+    <script>
+        function generate() {
+            const fileInput = document.getElementById('svgFile');
+            const color = document.getElementById('colorPicker').value;
+            const link = document.getElementById('downloadLink');
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                let svgText = e.target.result;
+                svgText = svgText.replace(/fill="[^"]*"/g, `fill="${color}"`);
+                const blob = new Blob([svgText], { type: 'image/svg+xml' });
+                link.href = URL.createObjectURL(blob);
+                link.style.display = 'inline';
+                link.textContent = 'Download New SVG';
+            };
+
+            if (fileInput.files.length > 0) {
+                reader.readAsText(fileInput.files[0]);
+            } else {
+                alert("Please upload a file.");
+            }
+        }
+    </script>
+</body>
+
+</html>
